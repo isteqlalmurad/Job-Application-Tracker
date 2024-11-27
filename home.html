@@ -1,298 +1,441 @@
-<html><head><base href="https://github.com/" /><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Job Application Tracker</title>
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide-react@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!DOCTYPE html>
+<html>
 
-<style>
-.fade-in {
-  animation: fadeIn 0.3s ease-in;
-}
+<head>
+    <base href="https://github.com/" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Job Application Tracker</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide-react@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
 
-.table-container {
-  overflow-x: auto;
-  max-width: 100%;
-}
+            to {
+                opacity: 1;
+            }
+        }
 
-@media (max-width: 768px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-}
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
 
-</style>
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body class="bg-gray-50">
-<div id="root" class="min-h-screen p-4">
-  <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6">
-    <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Job Application Tracker</h1>
-    
-    <div class="tabs mb-6">
-      <div class="tab-list flex space-x-4 border-b">
-        <button class="tab-btn px-4 py-2 text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 active">Add Application</button>
-        <button class="tab-btn px-4 py-2 text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600">View Applications</button>
-        <button class="tab-btn px-4 py-2 text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600">Analytics</button>
-      </div>
-    </div>
+    <div id="root" class="min-h-screen p-4">
+        <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Job Application Tracker</h1>
 
-    <!-- Application Form -->
-    <div class="tab-panel fade-in" id="add-application">
-      <form class="form-grid">
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Company *</label>
-          <input type="text" required class="w-full px-3 py-2 border rounded-md" />
-        </div>
-        
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
-          <input type="text" required class="w-full px-3 py-2 border rounded-md" />
-        </div>
-
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-          <input type="text" class="w-full px-3 py-2 border rounded-md" />
-        </div>
-
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Salary</label>
-          <input type="text" class="w-full px-3 py-2 border rounded-md" />
-        </div>
-
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Date Applied *</label>
-          <input type="date" required class="w-full px-3 py-2 border rounded-md" />
-        </div>
-
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-          <select class="w-full px-3 py-2 border rounded-md">
-            <option>Applied</option>
-            <option>Interview Scheduled</option>
-            <option>Interviewed</option>
-            <option>Rejected</option>
-            <option>Offer Received</option>
-            <option>Accepted</option>
-          </select>
-        </div>
-
-        <div class="form-group col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-          <textarea class="w-full px-3 py-2 border rounded-md" rows="4"></textarea>
-        </div>
-
-        <div class="col-span-2 mt-6">
-          <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
-            Save Application
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Applications Table -->
-    <div class="tab-panel hidden fade-in" id="view-applications">
-      <div class="mb-4">
-        <input type="search" placeholder="Search applications..." class="w-full px-3 py-2 border rounded-md" />
-      </div>
-
-      <div class="table-container">
-        <table class="min-w-full">
-          <thead>
-            <tr class="bg-gray-50">
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Applied</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <!-- Table rows will be dynamically populated -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Analytics Panel -->
-    <div class="tab-panel hidden fade-in" id="analytics">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold mb-4">Application Status Distribution</h3>
-          <canvas id="statusChart"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold mb-4">Applications Over Time</h3>
-          <canvas id="timelineChart"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow col-span-1 md:col-span-2">
-          <h3 class="text-lg font-semibold mb-4">Summary Statistics</h3>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-blue-50 p-4 rounded-lg">
-              <h4 class="text-sm text-gray-600">Total Applications</h4>
-              <p class="text-2xl font-bold text-blue-600" id="totalApplications">0</p>
+            <div class="tabs mb-6">
+                <div class="tab-list flex space-x-4 border-b">
+                    <button
+                        class="tab-btn px-4 py-2 text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 active">Add
+                        Application</button>
+                    <button
+                        class="tab-btn px-4 py-2 text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600">View
+                        Applications</button>
+                    <button
+                        class="tab-btn px-4 py-2 text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600">Should
+                        Apply</button>
+                    <button
+                        class="tab-btn px-4 py-2 text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600">Analytics</button>
+                </div>
             </div>
-            <div class="bg-green-50 p-4 rounded-lg">
-              <h4 class="text-sm text-gray-600">Interview Rate</h4>
-              <p class="text-2xl font-bold text-green-600" id="interviewRate">0%</p>
+
+            <!-- Application Form -->
+            <div class="tab-panel fade-in" id="add-application">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Company *</label>
+                        <input type="text" required class="w-full px-3 py-2 border rounded-md" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
+                        <input type="text" required class="w-full px-3 py-2 border rounded-md" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <input type="text" class="w-full px-3 py-2 border rounded-md" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Salary</label>
+                        <input type="text" class="w-full px-3 py-2 border rounded-md" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date Applied *</label>
+                        <input type="date" required class="w-full px-3 py-2 border rounded-md" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select class="w-full px-3 py-2 border rounded-md">
+                            <option>Applied</option>
+                            <option>Should Apply</option>
+                            <option>Interview Scheduled</option>
+                            <option>Interviewed</option>
+                            <option>Rejected</option>
+                            <option>Offer Received</option>
+                            <option>Accepted</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                        <textarea class="w-full px-3 py-2 border rounded-md" rows="4"></textarea>
+                    </div>
+
+                    <div class="col-span-2 mt-6">
+                        <button type="submit"
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                            Save Application
+                        </button>
+                    </div>
+                </form>
+                <!-- Backup buttons -->
+                <div class="mt-8 pt-4 border-t border-gray-200">
+                    <div class="flex justify-end space-x-4 text-sm">
+                        <button onclick="downloadBackup()" class="text-blue-600 hover:text-blue-800">Download
+                            Backup</button>
+                        <input type="file" id="restoreFile" accept=".json" class="hidden"
+                            onchange="restoreFromBackup(this)">
+                        <label for="restoreFile" class="text-blue-600 hover:text-blue-800 cursor-pointer">
+                            Restore from Backup
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="bg-yellow-50 p-4 rounded-lg">
-              <h4 class="text-sm text-gray-600">Pending Response</h4>
-              <p class="text-2xl font-bold text-yellow-600" id="pendingResponse">0</p>
+
+            <!-- Applications Table -->
+            <div class="tab-panel hidden fade-in" id="view-applications">
+                <div class="mb-4">
+                    <input type="search" placeholder="Search applications..."
+                        class="w-full px-3 py-2 border rounded-md" />
+                </div>
+
+                <div class="table-container">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Company</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Title</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Date Applied</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Table rows will be dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="bg-purple-50 p-4 rounded-lg">
-              <h4 class="text-sm text-gray-600">Offers Received</h4>
-              <p class="text-2xl font-bold text-purple-600" id="offersReceived">0</p>
+
+            <!-- Should Apply Table -->
+            <div class="tab-panel hidden fade-in" id="should-apply">
+                <div class="mb-4">
+                    <input type="search" placeholder="Search potential applications..."
+                        class="w-full px-3 py-2 border rounded-md" />
+                </div>
+
+                <div class="table-container">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Company</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Title</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Deadline</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    URL</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Table rows will be dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-          </div>
+
+            <!-- Analytics Panel -->
+            <div class="tab-panel hidden fade-in" id="analytics">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-4">Application Status Distribution</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-4">Applications Over Time</h3>
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow col-span-1 md:col-span-2">
+                        <h3 class="text-lg font-semibold mb-4">Summary Statistics</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="text-sm text-gray-600">Total Applications</h4>
+                                <p class="text-2xl font-bold text-blue-600" id="totalApplications">0</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h4 class="text-sm text-gray-600">Interview Rate</h4>
+                                <p class="text-2xl font-bold text-green-600" id="interviewRate">0%</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <h4 class="text-sm text-gray-600">Pending Response</h4>
+                                <p class="text-2xl font-bold text-yellow-600" id="pendingResponse">0</p>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <h4 class="text-sm text-gray-600">Offers Received</h4>
+                                <p class="text-2xl font-bold text-purple-600" id="offersReceived">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Modal -->
+            <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+                <div class="bg-white rounded-lg p-6 max-w-2xl mx-auto mt-20">
+                    <h2 class="text-2xl font-bold mb-4">Edit Application</h2>
+                    <form id="editForm" class="form-grid">
+                        <input type="hidden" id="editJobId">
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Company *</label>
+                            <input type="text" id="editCompany" required class="w-full px-3 py-2 border rounded-md" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
+                            <input type="text" id="editTitle" required class="w-full px-3 py-2 border rounded-md" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <input type="text" id="editLocation" class="w-full px-3 py-2 border rounded-md" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Salary</label>
+                            <input type="text" id="editSalary" class="w-full px-3 py-2 border rounded-md" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date Applied *</label>
+                            <input type="date" id="editDateApplied" required
+                                class="w-full px-3 py-2 border rounded-md" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="editStatus" class="w-full px-3 py-2 border rounded-md">
+                                <option>Applied</option>
+                                <option>Should Apply</option>
+                                <option>Interview Scheduled</option>
+                                <option>Interviewed</option>
+                                <option>Rejected</option>
+                                <option>Offer Received</option>
+                                <option>Accepted</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                            <textarea id="editNotes" class="w-full px-3 py-2 border rounded-md" rows="4"></textarea>
+                        </div>
+
+                        <div class="col-span-2 mt-6 flex space-x-4">
+                            <button type="submit"
+                                class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                                Save Changes
+                            </button>
+                            <button type="button" onclick="closeEditModal()"
+                                class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+
         </div>
-      </div>
+
     </div>
 
-    <!-- Edit Modal -->
-    <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
-      <div class="bg-white rounded-lg p-6 max-w-2xl mx-auto mt-20">
-        <h2 class="text-2xl font-bold mb-4">Edit Application</h2>
-        <form id="editForm" class="form-grid">
-          <input type="hidden" id="editJobId">
-          <div class="form-group">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Company *</label>
-            <input type="text" id="editCompany" required class="w-full px-3 py-2 border rounded-md" />
-          </div>
-          
-          <div class="form-group">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
-            <input type="text" id="editTitle" required class="w-full px-3 py-2 border rounded-md" />
-          </div>
+    <script>
+        let jobs = JSON.parse(localStorage.getItem('jobApplications')) || [];
+        let shouldApplyJobs = JSON.parse(localStorage.getItem('shouldApplyJobs')) || [];
+        let statusChart = null;
+        let timelineChart = null;
+        const form = document.querySelector('form');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabPanels = document.querySelectorAll('.tab-panel');
 
-          <div class="form-group">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input type="text" id="editLocation" class="w-full px-3 py-2 border rounded-md" />
-          </div>
+        // Tab handling
+        tabButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.remove('border-blue-600');
+                });
+                tabPanels.forEach(panel => panel.classList.add('hidden'));
 
-          <div class="form-group">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Salary</label>
-            <input type="text" id="editSalary" class="w-full px-3 py-2 border rounded-md" />
-          </div>
+                button.classList.add('active');
+                button.classList.add('border-blue-600');
+                tabPanels[index].classList.remove('hidden');
 
-          <div class="form-group">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Date Applied *</label>
-            <input type="date" id="editDateApplied" required class="w-full px-3 py-2 border rounded-md" />
-          </div>
+                if (index === 2) {
+                    updateShouldApplyTable();
+                } else if (index === 3) {
+                    updateAnalytics();
+                }
+            });
+        });
 
-          <div class="form-group">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select id="editStatus" class="w-full px-3 py-2 border rounded-md">
-              <option>Applied</option>
-              <option>Interview Scheduled</option>
-              <option>Interviewed</option>
-              <option>Rejected</option>
-              <option>Offer Received</option>
-              <option>Accepted</option>
-            </select>
-          </div>
+        // Status change handler for dynamic fields
+        document.querySelector('select').addEventListener('change', (e) => {
+            const deadlineField = document.getElementById('deadline-field');
+            const urlField = document.getElementById('url-field');
 
-          <div class="form-group col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-            <textarea id="editNotes" class="w-full px-3 py-2 border rounded-md" rows="4"></textarea>
-          </div>
+            if (e.target.value === 'Should Apply') {
+                if (!deadlineField) {
+                    const deadlineDiv = document.createElement('div');
+                    deadlineDiv.id = 'deadline-field';
+                    deadlineDiv.className = 'form-group';
+                    deadlineDiv.innerHTML = `
+        <label class="block text-sm font-medium text-gray-700 mb-1">Application Deadline</label>
+        <input type="date" class="w-full px-3 py-2 border rounded-md" />
+      `;
+                    e.target.parentNode.after(deadlineDiv);
+                }
 
-          <div class="col-span-2 mt-6 flex space-x-4">
-            <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
-              Save Changes
-            </button>
-            <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors">
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+                if (!urlField) {
+                    const urlDiv = document.createElement('div');
+                    urlDiv.id = 'url-field';
+                    urlDiv.className = 'form-group';
+                    urlDiv.innerHTML = `
+        <label class="block text-sm font-medium text-gray-700 mb-1">Job URL</label>
+        <input type="url" class="w-full px-3 py-2 border rounded-md" />
+      `;
+                    e.target.parentNode.after(urlDiv);
+                }
+            } else {
+                deadlineField?.remove();
+                urlField?.remove();
+            }
+        });
 
-<script>
-let jobs = JSON.parse(localStorage.getItem('jobApplications')) || [];
-let statusChart = null;
-let timelineChart = null;
-const form = document.querySelector('form');
-const searchInput = document.querySelector('input[type="search"]');
-const tabButtons = document.querySelectorAll('.tab-btn');
-const tabPanels = document.querySelectorAll('.tab-panel');
+        // Form submission handler
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-tabButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    tabButtons.forEach(btn => {
-      btn.classList.remove('active');
-      btn.classList.remove('border-blue-600');
-    });
-    tabPanels.forEach(panel => panel.classList.add('hidden'));
-    
-    button.classList.add('active');
-    button.classList.add('border-blue-600');
-    tabPanels[index].classList.remove('hidden');
-    
-    if (index === 2) {
-      updateAnalytics();
-    }
-  });
-});
+            const status = form.querySelector('select').value;
+            // Create the base job object
+            const newJob = {
+                id: Date.now(),
+                company: form.querySelector('input[type="text"]').value,
+                title: form.querySelectorAll('input[type="text"]')[1].value,
+                location: form.querySelectorAll('input[type="text"]')[2].value,
+                salary: form.querySelectorAll('input[type="text"]')[3].value,
+                dateApplied: form.querySelector('input[type="date"]').value,
+                status: status,
+                notes: form.querySelector('textarea').value
+            };
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  const company = form.querySelector('input[type="text"]').value;
-  const title = form.querySelectorAll('input[type="text"]')[1].value;
-  const location = form.querySelectorAll('input[type="text"]')[2].value;
-  const salary = form.querySelectorAll('input[type="text"]')[3].value;
-  const dateApplied = form.querySelector('input[type="date"]').value;
-  const status = form.querySelector('select').value;
-  const notes = form.querySelector('textarea').value;
+            // Changed the condition to explicitly check for "Should Apply"
+            if (status === 'Should Apply') {
+                newJob.deadline = document.querySelector('#deadline-field input')?.value || '';
+                newJob.url = document.querySelector('#url-field input')?.value || '';
+                shouldApplyJobs.push(newJob);
+                localStorage.setItem('shouldApplyJobs', JSON.stringify(shouldApplyJobs));
+                updateShouldApplyTable();
+            } else {
+                // This will now be the default case
+                jobs.push(newJob);
+                localStorage.setItem('jobApplications', JSON.stringify(jobs));
+                updateTable();
+            }
 
-  const newJob = {
-    id: Date.now(),
-    company: company,
-    title: title,
-    location: location,
-    salary: salary,
-    dateApplied: dateApplied,
-    status: status,
-    notes: notes
-  };
+            form.reset();
+            updateAnalytics();
+        });
 
-  jobs.push(newJob);
-  localStorage.setItem('jobApplications', JSON.stringify(jobs));
-  
-  form.reset();
-  updateTable();
-  updateAnalytics();
-});
+        // Search handlers
+        document.querySelectorAll('input[type="search"]').forEach(searchInput => {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchInput.closest('#view-applications')) {
+                    const filteredJobs = jobs.filter(job =>
+                        job.company.toLowerCase().includes(searchTerm) ||
+                        job.title.toLowerCase().includes(searchTerm)
+                    );
+                    updateTable(filteredJobs);
+                } else if (searchInput.closest('#should-apply')) {
+                    const filteredJobs = shouldApplyJobs.filter(job =>
+                        job.company.toLowerCase().includes(searchTerm) ||
+                        job.title.toLowerCase().includes(searchTerm)
+                    );
+                    updateShouldApplyTable(filteredJobs);
+                }
+            });
+        });
 
-searchInput.addEventListener('input', (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  const filteredJobs = jobs.filter(job => 
-    job.company.toLowerCase().includes(searchTerm) ||
-    job.title.toLowerCase().includes(searchTerm)
-  );
-  updateTable(filteredJobs);
-});
+        // Table update functions
+        function updateTable(data = jobs) {
+            const tbody = document.querySelector('#view-applications tbody');
+            tbody.innerHTML = '';
 
-function updateTable(data = jobs) {
-  const tbody = document.querySelector('tbody');
-  tbody.innerHTML = '';
-  
-  data.forEach(job => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
+            data.forEach(job => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${job.company}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${job.title}</td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${job.dateApplied}</td>
@@ -304,156 +447,281 @@ function updateTable(data = jobs) {
         <button onclick="deleteJob(${job.id})" class="text-red-600 hover:text-red-800">Delete</button>
       </td>
     `;
-    tbody.appendChild(tr);
-  });
-}
+                tbody.appendChild(tr);
+            });
+        }
 
-function getStatusColor(status) {
-  const colors = {
-    'Applied': 'bg-yellow-100 text-yellow-800',
-    'Interview Scheduled': 'bg-blue-100 text-blue-800',
-    'Interviewed': 'bg-purple-100 text-purple-800',
-    'Rejected': 'bg-red-100 text-red-800',
-    'Offer Received': 'bg-green-100 text-green-800',
-    'Accepted': 'bg-green-100 text-green-800'
-  };
-  return colors[status] || 'bg-gray-100 text-gray-800';
-}
+        function updateShouldApplyTable(data = shouldApplyJobs) {
+            const tbody = document.querySelector('#should-apply tbody');
+            tbody.innerHTML = '';
 
-function deleteJob(id) {
-  jobs = jobs.filter(job => job.id !== id);
-  localStorage.setItem('jobApplications', JSON.stringify(jobs));
-  updateTable();
-  updateAnalytics();
-}
+            data.forEach(job => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${job.company}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${job.title}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${job.deadline}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+        <a href="${job.url}" target="_blank" class="text-blue-600 hover:text-blue-800">View Job</a>
+      </td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+        <button onclick="convertToApplication(${job.id})" class="text-green-600 hover:text-green-800 mr-2">Apply</button>
+        <button onclick="deleteShoudApplyJob(${job.id})" class="text-red-600 hover:text-red-800">Delete</button>
+      </td>
+    `;
+                tbody.appendChild(tr);
+            });
+        }
 
-function openEditModal(id) {
-  const job = jobs.find(j => j.id === id);
-  if (!job) return;
+        // Status color helper
+        function getStatusColor(status) {
+            const colors = {
+                'Should Apply': 'bg-gray-100 text-gray-800',
+                'Applied': 'bg-yellow-100 text-yellow-800',
+                'Interview Scheduled': 'bg-blue-100 text-blue-800',
+                'Interviewed': 'bg-purple-100 text-purple-800',
+                'Rejected': 'bg-red-100 text-red-800',
+                'Offer Received': 'bg-green-100 text-green-800',
+                'Accepted': 'bg-green-100 text-green-800'
+            };
+            return colors[status] || 'bg-gray-100 text-gray-800';
+        }
 
-  document.getElementById('editJobId').value = job.id;
-  document.getElementById('editCompany').value = job.company;
-  document.getElementById('editTitle').value = job.title;
-  document.getElementById('editLocation').value = job.location;
-  document.getElementById('editSalary').value = job.salary;
-  document.getElementById('editDateApplied').value = job.dateApplied;
-  document.getElementById('editStatus').value = job.status;
-  document.getElementById('editNotes').value = job.notes;
+        // Job management functions
+        function deleteJob(id) {
+            jobs = jobs.filter(job => job.id !== id);
+            localStorage.setItem('jobApplications', JSON.stringify(jobs));
+            updateTable();
+            updateAnalytics();
+        }
 
-  document.getElementById('editModal').classList.remove('hidden');
-}
+        function deleteShoudApplyJob(id) {
+            shouldApplyJobs = shouldApplyJobs.filter(job => job.id !== id);
+            localStorage.setItem('shouldApplyJobs', JSON.stringify(shouldApplyJobs));
+            updateShouldApplyTable();
+        }
 
-function closeEditModal() {
-  document.getElementById('editModal').classList.add('hidden');
-}
+        function convertToApplication(id) {
+            const job = shouldApplyJobs.find(j => j.id === id);
+            if (!job) return;
 
-document.getElementById('editForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  const id = parseInt(document.getElementById('editJobId').value);
-  const jobIndex = jobs.findIndex(j => j.id === id);
-  
-  if (jobIndex === -1) return;
+            const newJob = { ...job, status: 'Applied', dateApplied: new Date().toISOString().split('T')[0] };
+            jobs.push(newJob);
+            shouldApplyJobs = shouldApplyJobs.filter(j => j.id !== id);
 
-  jobs[jobIndex] = {
-    id: id,
-    company: document.getElementById('editCompany').value,
-    title: document.getElementById('editTitle').value,
-    location: document.getElementById('editLocation').value,
-    salary: document.getElementById('editSalary').value,
-    dateApplied: document.getElementById('editDateApplied').value,
-    status: document.getElementById('editStatus').value,
-    notes: document.getElementById('editNotes').value
-  };
+            localStorage.setItem('jobApplications', JSON.stringify(jobs));
+            localStorage.setItem('shouldApplyJobs', JSON.stringify(shouldApplyJobs));
 
-  localStorage.setItem('jobApplications', JSON.stringify(jobs));
-  updateTable();
-  closeEditModal();
-  updateAnalytics();
-});
+            updateTable();
+            updateShouldApplyTable();
+            updateAnalytics();
+        }
 
-function updateAnalytics() {
-  updateStatusChart();
-  updateTimelineChart();
-  updateSummaryStats();
-}
+        // Modal functions
+        function openEditModal(id) {
+            const job = jobs.find(j => j.id === id);
+            if (!job) return;
 
-function updateStatusChart() {
-  const statusCounts = jobs.reduce((acc, job) => {
-    acc[job.status] = (acc[job.status] || 0) + 1;
-    return acc;
-  }, {});
+            document.getElementById('editJobId').value = job.id;
+            document.getElementById('editCompany').value = job.company;
+            document.getElementById('editTitle').value = job.title;
+            document.getElementById('editLocation').value = job.location;
+            document.getElementById('editSalary').value = job.salary;
+            document.getElementById('editDateApplied').value = job.dateApplied;
+            document.getElementById('editStatus').value = job.status;
+            document.getElementById('editNotes').value = job.notes;
 
-  const ctx = document.getElementById('statusChart').getContext('2d');
-  
-  if (statusChart) {
-    statusChart.destroy();
-  }
+            document.getElementById('editModal').classList.remove('hidden');
+        }
 
-  statusChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: Object.keys(statusCounts),
-      datasets: [{
-        data: Object.values(statusCounts),
-        backgroundColor: [
-          '#FCD34D',
-          '#60A5FA',
-          '#A78BFA',
-          '#F87171',
-          '#34D399',
-          '#34D399'
-        ]
-      }]
-    }
-  });
-}
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
 
-function updateTimelineChart() {
-  const timelineData = {};
-  jobs.forEach(job => {
-    const date = job.dateApplied;
-    timelineData[date] = (timelineData[date] || 0) + 1;
-  });
+        // Edit form handler
+        document.getElementById('editForm').addEventListener('submit', (e) => {
+            e.preventDefault();
 
-  const ctx = document.getElementById('timelineChart').getContext('2d');
-  
-  if (timelineChart) {
-    timelineChart.destroy();
-  }
+            const id = parseInt(document.getElementById('editJobId').value);
+            const status = document.getElementById('editStatus').value;
+            const jobIndex = jobs.findIndex(j => j.id === id);
 
-  timelineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: Object.keys(timelineData).sort(),
-      datasets: [{
-        label: 'Applications',
-        data: Object.values(timelineData),
-        borderColor: '#60A5FA',
-        tension: 0.1
-      }]
-    }
-  });
-}
+            if (jobIndex === -1) return;
 
-function updateSummaryStats() {
-  const totalApps = jobs.length;
-  const interviews = jobs.filter(job => 
-    ['Interview Scheduled', 'Interviewed', 'Offer Received', 'Accepted'].includes(job.status)
-  ).length;
-  const pending = jobs.filter(job => job.status === 'Applied').length;
-  const offers = jobs.filter(job => 
-    ['Offer Received', 'Accepted'].includes(job.status)
-  ).length;
+            const updatedJob = {
+                id: id,
+                company: document.getElementById('editCompany').value,
+                title: document.getElementById('editTitle').value,
+                location: document.getElementById('editLocation').value,
+                salary: document.getElementById('editSalary').value,
+                dateApplied: document.getElementById('editDateApplied').value,
+                status: status,
+                notes: document.getElementById('editNotes').value
+            };
 
-  document.getElementById('totalApplications').textContent = totalApps;
-  document.getElementById('interviewRate').textContent = 
-    totalApps ? Math.round((interviews / totalApps) * 100) + '%' : '0%';
-  document.getElementById('pendingResponse').textContent = pending;
-  document.getElementById('offersReceived').textContent = offers;
-}
+            jobs[jobIndex] = updatedJob;
+            localStorage.setItem('jobApplications', JSON.stringify(jobs));
+            updateTable();
+            closeEditModal();
+            updateAnalytics();
+        });
 
-updateTable();
-updateAnalytics();
-</script>
-</body></html>
+        // Analytics functions
+        function updateAnalytics() {
+            updateStatusChart();
+            updateTimelineChart();
+            updateSummaryStats();
+        }
+
+        function updateStatusChart() {
+            const statusCounts = jobs.reduce((acc, job) => {
+                acc[job.status] = (acc[job.status] || 0) + 1;
+                return acc;
+            }, {});
+
+            const ctx = document.getElementById('statusChart').getContext('2d');
+
+            if (statusChart) {
+                statusChart.destroy();
+            }
+
+            statusChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: [
+                            '#FCD34D',
+                            '#60A5FA',
+                            '#A78BFA',
+                            '#F87171',
+                            '#34D399',
+                            '#34D399'
+                        ]
+                    }]
+                }
+            });
+        }
+
+        function updateTimelineChart() {
+            const timelineData = {};
+            jobs.forEach(job => {
+                const date = job.dateApplied;
+                timelineData[date] = (timelineData[date] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+
+            if (timelineChart) {
+                timelineChart.destroy();
+            }
+
+            timelineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(timelineData).sort(),
+                    datasets: [{
+                        label: 'Applications',
+                        data: Object.values(timelineData),
+                        borderColor: '#60A5FA',
+                        tension: 0.1
+                    }]
+                }
+            });
+        }
+
+        function updateSummaryStats() {
+            const totalApps = jobs.length;
+            const interviews = jobs.filter(job =>
+                ['Interview Scheduled', 'Interviewed', 'Offer Received', 'Accepted'].includes(job.status)
+            ).length;
+            const pending = jobs.filter(job => job.status === 'Applied').length;
+            const offers = jobs.filter(job =>
+                ['Offer Received', 'Accepted'].includes(job.status)
+            ).length;
+
+            document.getElementById('totalApplications').textContent = totalApps;
+            document.getElementById('interviewRate').textContent =
+                totalApps ? Math.round((interviews / totalApps) * 100) + '%' : '0%';
+            document.getElementById('pendingResponse').textContent = pending;
+            document.getElementById('offersReceived').textContent = offers;
+        }
+
+        // Initialize
+        updateTable();
+        updateShouldApplyTable();
+        updateAnalytics();
+
+        // Add these functions at the end of your JavaScript code
+
+        function downloadBackup() {
+            // Prepare the backup data
+            const backupData = {
+                jobApplications: jobs,
+                shouldApplyJobs: shouldApplyJobs,
+                exportDate: new Date().toISOString()
+            };
+
+            // Convert to JSON string
+            const dataStr = JSON.stringify(backupData, null, 2);
+
+            // Create download link
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+            // Create a temporary link element
+            const exportFileDefaultName = `job-tracker-backup-${new Date().toISOString().split('T')[0]}.json`;
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+
+            // Simulate click to trigger download
+            linkElement.click();
+        }
+
+        function restoreFromBackup(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+
+                    // Validate backup data
+                    if (!backupData.jobApplications || !backupData.shouldApplyJobs) {
+                        alert('Invalid backup file format');
+                        return;
+                    }
+
+                    // Confirm before overwriting
+                    if (confirm('This will replace all current data. Are you sure you want to proceed?')) {
+                        // Restore the data
+                        jobs = backupData.jobApplications;
+                        shouldApplyJobs = backupData.shouldApplyJobs;
+
+                        // Update localStorage
+                        localStorage.setItem('jobApplications', JSON.stringify(jobs));
+                        localStorage.setItem('shouldApplyJobs', JSON.stringify(shouldApplyJobs));
+
+                        // Update UI
+                        updateTable();
+                        updateShouldApplyTable();
+                        updateAnalytics();
+
+                        alert('Data restored successfully!');
+                    }
+                } catch (error) {
+                    alert('Error restoring backup: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+
+            // Reset file input
+            input.value = '';
+        }
+
+    </script>
+</body>
+
+</html>
